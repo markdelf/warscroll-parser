@@ -19,14 +19,7 @@ fs.readdir(textDirectory, function(err, files) {
                 for(var w in warscrolls) {
                     if (warscrolls[w].length > 1) {
                         var warscroll = handleSplitText(warscrolls[w]);
-                        if (allData[warscroll.name]) {
-                            if (warscroll.keywords.length > 0) {
-                                //Cases where the entry already exists somehow but no keywords
-                                allData[warscroll.name].keywords = warscroll.keywords;
-                            }
-                        } else {
-                            allData[warscroll.name] = warscroll;
-                        }
+                        allData[getNameKey(warscroll.name)] = warscroll;
                     }
                 }
             }
@@ -48,14 +41,7 @@ fs.readdir(textDirectory, function(err, files) {
             warscroll = handlePDF(lines);
         }
         if (warscroll != false) {
-            if (allData[warscroll.name]) {
-                if (warscroll.keywords.length > 0) {
-                    //Cases where the entry already exists somehow but no keywords
-                    allData[warscroll.name].keywords = warscroll.keywords;
-                }
-            } else {
-                allData[warscroll.name] = warscroll;
-            }
+            allData[getNameKey(warscroll.name)] = warscroll;
         }
     });
 
@@ -67,6 +53,11 @@ fs.readdir(textDirectory, function(err, files) {
       });
     console.log(allData);
 });
+
+function getNameKey(name)
+{
+    return name.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "-");
+}
 
 function handleOCR(lines) {
     var data = {};
