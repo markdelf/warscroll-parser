@@ -26,7 +26,7 @@
     </head>
     <body ng-controller="SampleCtrl">
         <div class="container">
-            <h1>Browse Parsed Warscrolls</h1>
+            <h1>Browse {{warscrolls.length > 0 ? warscrolls.length : ""}} AOS Warscroll Keywords</h1>
             <div class="login-box" ng-if="!currentUser">
                 <button class="btn btn-info btn-raised" ng-click="doLogin()">Login with Google</button>
             </div>
