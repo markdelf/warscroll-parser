@@ -1,0 +1,51 @@
+<html ng-app="sampleApp">
+    <head>
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/bootstrap-material-design.min.css" />
+        <link rel="stylesheet" href="css/app.css" />
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
+        <script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+        <script>
+        // Initialize Firebase
+        var config = {
+        apiKey: "AIzaSyD2NcGAedd-uGJ5YU3G7baAnxgyYvr2bd4",
+        authDomain: "aos-warscrolls.firebaseapp.com",
+        databaseURL: "https://aos-warscrolls.firebaseio.com",
+        storageBucket: "aos-warscrolls.appspot.com",
+        };
+        firebase.initializeApp(config);
+        $(function(){
+        $.material.init()
+        });
+        </script>
+        <script src="js/app.js"></script>
+    </head>
+    <body ng-controller="SampleCtrl">
+        <div class="container">
+            <h1>Browse Parsed Warscrolls</h1>
+            <div class="login-box" ng-if="!currentUser">
+                <button class="btn btn-info btn-raised" ng-click="doLogin()">Login with Google</button>
+            </div>
+            <div class="main-content" ng-if="currentUser">
+                <div class="form-group label-floating">
+                    <label for="i5" class="control-label">Type here to search..</label>
+                    <input type="text" class="form-control" id="i5"  ng-model="searchText">
+                    <span class="help-block">You can search by keyword or warscroll name</span>
+                </div>
+                <br /><br />
+                <div class="well warscroll" ng-repeat="warscroll in warscrolls | filter:searchText">
+                    <h2>{{ warscroll.name }}</h2>
+                    <div class="keywords" ng-repeat="keywordLine in warscroll.keywords">
+                        <span class="label label-default">Keywords</span>
+                        <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "aos-warscrolls",
+  "authors": [
+    "Mark Camilleri <mark.camilleri@preeostudios.com>"
+  ],
+  "description": "",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-material-design": "^0.5.10"
+  }
+}
