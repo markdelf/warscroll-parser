@@ -1,7 +1,10 @@
 <html ng-app="sampleApp">
     <head>
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/bootstrap-material-design.min.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" />
         <link rel="stylesheet" href="css/app.css" />
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -19,10 +22,14 @@
         };
         firebase.initializeApp(config);
         $(function(){
-        $.material.init()
+            $.material.init();
+            $('#warscrollModal').on('shown.bs.modal', function (e) {
+              $.material.init();
+            })
         });
         </script>
         <script src="js/app.js"></script>
+          <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body ng-controller="SampleCtrl">
         <div class="container">
@@ -39,13 +46,71 @@
                 <br /><br />
                 <div class="well warscroll" ng-repeat="warscroll in warscrolls | filter:searchText">
                     <h2>{{ warscroll.name }}</h2>
-                    <div class="keywords" ng-repeat="keywordLine in warscroll.keywords">
-                        <span class="label label-default">Keywords</span>
-                        <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-9">
+                            <div class="keywords" ng-repeat="keywordLine in warscroll.keywords">
+                                <span class="label label-default">Keywords</span>
+                                <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3">
+                            <button ng-click="selectWarscroll(warscroll);" class="btn btn-info btn-raised">{{warscroll.points?warscroll.points:"Set Points"}}</button>
+                        </div>
                     </div>
                 </li>
             </div>
         </div>
+        <div class="modal fade" id="warscrollModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content" ng-if="selectedWarscroll">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{selectedWarscroll.name}}</h4>
+              </div>
+              <div class="modal-body">
+                 <div class="form-group label-floating">
+                    <label for="scrollPoints" class="control-label">Points</label>
+                    <input type="number" class="form-control" id="scrollPoints"  ng-model="selectedWarscroll.points"  ng-change="warscrolls.$save(selectedWarscroll)">
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                            <label for="scrollMinSize" class="control-label">Min Size</label>
+                            <input type="number" class="form-control" id="scrollMinSize"  ng-model="selectedWarscroll.minSize" ng-change="warscrolls.$save(selectedWarscroll)">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group label-floating">
+                            <label for="scrollMaxSize" class="control-label">Max Size</label>
+                            <input type="number" class="form-control" id="scrollMaxSize"  ng-model="selectedWarscroll.maxSize" ng-change="warscrolls.$save(selectedWarscroll)">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <div class="checkbox-inline" ng-repeat="unitType in unitTypes">
+                    <div class="checkbox">
+                        <label>
+                          <input type="checkbox" value="true" ng-model="selectedWarscroll.unitTypes[unitType.$id]" ng-change="warscrolls.$save(selectedWarscroll)"> {{unitType.$value}}
+                        </label>
+                    </div>
+                  </div>
+                </div>
+                 <div class="form-group">
+                  <p>Becomes battleline when all units have this keyword:</p>
+                  <select class="form-control" ng-model="selectedWarscroll.battlelineWhen" ng-change="warscrolls.$save(selectedWarscroll)">
+                  <option value="">Not applicable</option>
+                  <option ng-repeat="keyword in selectedWarscroll.keywords[0]" value="{{keyword}}">{{keyword}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Next</button>
+                <button type="button" class="btn btn-warning">Prev</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </div>
 </body>
 </html>
