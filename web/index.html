@@ -40,11 +40,11 @@
             <div class="main-content" ng-if="currentUser">
                 <div class="form-group label-floating">
                     <label for="i5" class="control-label">Type here to search..</label>
-                    <input type="text" class="form-control" id="i5"  ng-model="searchText">
+                    <input type="text" class="form-control" id="i5"  ng-model="searchText" ng-change="filterWarscrolls(searchText)">
                     <span class="help-block">You can search by keyword or warscroll name</span>
                 </div>
                 <br /><br />
-                <div class="well warscroll" ng-repeat="warscroll in warscrolls | filter:searchText">
+                <div class="well warscroll" ng-repeat="warscroll in filteredWarscrolls">
                     <h2>{{ warscroll.name }}</h2>
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
@@ -53,8 +53,8 @@
                                 <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-3">
-                            <button ng-click="selectWarscroll(warscroll);" class="btn btn-info btn-raised">{{warscroll.points?warscroll.points:"Set Points"}}</button>
+                        <div class="col-xs-12 col-md-3 text-right">
+                            <span style="cursor: pointer;" ng-click="selectWarscroll(warscroll);" class="label label-info">{{warscroll.points?warscroll.points + "pts":"Set Points"}}</span>
                         </div>
                     </div>
                 </li>
@@ -68,6 +68,10 @@
                 <h4 class="modal-title">{{selectedWarscroll.name}}</h4>
               </div>
               <div class="modal-body">
+                <div class="keywords" ng-repeat="keywordLine in selectedWarscroll.keywords">
+                    <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
+                </div>
+                <hr />
                  <div class="form-group label-floating">
                     <label for="scrollPoints" class="control-label">Points</label>
                     <input type="number" class="form-control" id="scrollPoints"  ng-model="selectedWarscroll.points"  ng-change="warscrolls.$save(selectedWarscroll)">
@@ -104,9 +108,9 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Next</button>
-                <button type="button" class="btn btn-warning">Prev</button>
+                <button type="button" class="btn btn-info" data-dismiss="modal" ng-click="warscrolls.$save(selectedWarscroll)">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="warscrolls.$save(selectedWarscroll); showNext()">Next</button>
+                <button type="button" class="btn btn-warning" ng-click="warscrolls.$save(selectedWarscroll); showPrev()">Prev</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
