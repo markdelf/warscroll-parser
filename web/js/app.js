@@ -1,5 +1,5 @@
-var app = angular.module("sampleApp", ["firebase"]);
-app.controller("SampleCtrl", function($scope, $firebaseAuth, $firebaseArray, $window, $filter) {
+var app = angular.module("warscrollsApp", ["firebase", 'localytics.directives']);
+app.controller("MainCtrl", function($scope, $firebaseAuth, $firebaseArray, $window, $filter) {
   var warscrollsRef = firebase.database().ref('/warscrolls');
   var unitTypesRef = firebase.database().ref('/unit-types');
 
@@ -17,12 +17,39 @@ app.controller("SampleCtrl", function($scope, $firebaseAuth, $firebaseArray, $wi
       });
   };
 
+   var getAllKeywords = function(){
+    var allKeywords = [];
+    for(var i = 0; i < $scope.warscrolls.length; i++) {
+          var scroll = $scope.warscrolls[i];
+          console.log(i);
+          for(var k in scroll.keywords) {
+              var keyword = scroll.keywords[k];
+              if(allKeywords.indexOf(keyword) < 0) {
+                allKeywords.push(keyword);
+              }
+          }
+        }
+      return allKeywords;
+  }
+
+  $scope.addKeyword = function(term) {
+    $scope.$apply(function() {
+      if ($scope.allKeywords.indexOf(term) < 0) {
+        $scope.allKeywords.push(term);
+        $scope.selectedWarscroll.keywords.push(term);
+      }
+    });
+  }
+
   $scope.filterWarscrolls = function(text) {
     var results = $filter('filter')($scope.warscrolls, text);
     $scope.filteredWarscrolls = results;
   }
 
   $scope.selectWarscroll = function(warscroll) {
+    if (!$scope.allKeywords) {
+        $scope.allKeywords = getAllKeywords();
+    }
     $scope.selectedWarscroll = warscroll;
     $('#warscrollModal').modal('show');
   };
@@ -46,4 +73,6 @@ app.controller("SampleCtrl", function($scope, $firebaseAuth, $firebaseArray, $wi
     $scope.selectedWarscroll = $scope.filteredWarscrolls[prev];
     $window.scrollTo(0, 0);
   }
+
+  $scope.doLogin();
 });

@@ -77,7 +77,7 @@ function getKeywords(lines)
     if (keywordLines.length > 0) {
         for(var lineNo in keywordLines) {
             var keywordLine = getLinePart(keywordLines[lineNo], "KEYWORDS", true);
-            result.push(keywordLine.replace(/[^A-Z ,]/g, '').trim().split(", "));
+            result = keywordLine.replace(/[^A-Z ,]/g, '').trim().split(", ");
         }
     }
     return result;
@@ -86,9 +86,6 @@ function getKeywords(lines)
 function handleSplitText(lines) {
     var data = {};
     data.name = getLine(0, lines).trim();
-    if (data.name == "ELTHARION ON STORMWING") {
-        data.keywords = getKeywords(lines);
-    }
     data.keywords = getKeywords(lines);
     return data;
 }

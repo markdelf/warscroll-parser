@@ -14,7 +14,7 @@ fs.readdir(pdfDirectory, function(err, files) {
         if (fileSize == 0) {
           convertPdf(pdfFilePath, function(imageFilePath) {
             extractTextFromImage(imageFilePath, function(text) {
-                fs.writeFile(textFilePath, "ocr" + os.EOL + text, function(err) {
+                fs.writeFile(textFilePath + ".html", text, function(err) {
                   if(err) {
                       return console.log(err);
                   }
@@ -53,7 +53,7 @@ function convertPdf(pdfFilePath, onSuccess) {
 }
 
 function extractTextFromImage(imageFilePath, onSuccess) {
-    tesseract.process(imageFilePath, function(err, text) {
+    tesseract.process(imageFilePath, {'config': 'hocr'}, function(err, text) {
         if (!err) {
             onSuccess(text);
         } else {

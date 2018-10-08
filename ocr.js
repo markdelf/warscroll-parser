@@ -1,6 +1,6 @@
 var tesseract = require('node-tesseract');
 
-tesseract.process(__dirname + '/test-1.jpg',function(err, text) {
+tesseract.process(__dirname + '/images/aos-warscroll-prostecutorhammers-en.jpg', {'config': 'hocr'}, function(err, text) {
     if(err) {
         console.error(err);
     } else {

@@ -1,10 +1,11 @@
-<html ng-app="sampleApp">
+<html ng-app="warscrollsApp">
     <head>
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/bootstrap-material-design.min.css" />
         <link rel="stylesheet" href="bower_components/bootstrap-material-design/dist/css/ripples.min.css" />
+        <link rel="stylesheet" href="bower_components/chosen/chosen.css" />
         <link rel="stylesheet" href="css/app.css" />
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
         <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -12,6 +13,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/3.0.3/firebase.js"></script>
         <script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
+        <script src="bower_components/chosen/chosen.jquery.js"></script>
+        <script src="bower_components/angular-chosen-localytics/dist/angular-chosen.min.js"></script>
         <script>
         // Initialize Firebase
         var config = {
@@ -31,7 +34,7 @@
         <script src="js/app.js"></script>
           <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
-    <body ng-controller="SampleCtrl">
+    <body ng-controller="MainCtrl">
         <div class="container">
             <h1>Browse {{warscrolls.length > 0 ? warscrolls.length : ""}} AOS Warscroll Keywords</h1>
             <div class="login-box" ng-if="!currentUser">
@@ -48,9 +51,9 @@
                     <h2>{{ warscroll.name }}</h2>
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
-                            <div class="keywords" ng-repeat="keywordLine in warscroll.keywords">
+                            <div class="keywords">
                                 <span class="label label-default">Keywords</span>
-                                <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
+                                <span class="label label-primary" ng-repeat="keyword in warscroll.keywords">{{keyword}}</span>
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-3 text-right">
@@ -68,10 +71,18 @@
                 <h4 class="modal-title">{{selectedWarscroll.name}}</h4>
               </div>
               <div class="modal-body">
-                <div class="keywords" ng-repeat="keywordLine in selectedWarscroll.keywords">
-                    <span class="label label-primary" ng-repeat="keyword in keywordLine">{{keyword}}</span>
+                 <div class="form-group label-floating">
+                    <label for="scrollName" class="control-label">Name</label>
+                    <input class="form-control" id="scrollName" value="{{selectedWarscroll.name}}" type="text" ng-model="selectedWarscroll.name" />
                 </div>
-                <hr />
+                <div class="form-group label-floating">
+                    <label for="keywordSelection" class="control-label" style="margin-bottom: 5px;">Keywords</label>
+                    <select multiple
+                    chosen="{width: '100%', 'no_results_text': 'Keyword not found, type ; to add'}"
+                    id="keywordSelection"
+                    ng-model="selectedWarscroll.keywords"
+                    ng-options="s for s in allKeywords"></select>
+                </div>
                  <div class="form-group label-floating">
                     <label for="scrollPoints" class="control-label">Points</label>
                     <input type="number" class="form-control" id="scrollPoints"  ng-model="selectedWarscroll.points"  ng-change="warscrolls.$save(selectedWarscroll)">
@@ -103,7 +114,7 @@
                   <p>Becomes battleline when all units have this keyword:</p>
                   <select class="form-control" ng-model="selectedWarscroll.battlelineWhen" ng-change="warscrolls.$save(selectedWarscroll)">
                   <option value="">Not applicable</option>
-                  <option ng-repeat="keyword in selectedWarscroll.keywords[0]" value="{{keyword}}">{{keyword}}</option>
+                  <option ng-repeat="keyword in selectedWarscroll.keywords" value="{{keyword}}">{{keyword}}</option>
                   </select>
                 </div>
               </div>
